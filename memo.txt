@@ -39,15 +39,15 @@ sudo yum -y install php71 php71-mbstring php71-pdo
 
 # MySQL
 
-
 sudo service mysqld start
 mysql -u root
 show databases;
-create database bbs_new character set utf8;
+create database race_horse character set utf8;
 show databases;
 
-use bbs_new;
+use race_horse;
 
+// 会員情報を保存するテーブル
 create table users(
     id int primary key auto_increment, 
     name varchar(50) not null,
