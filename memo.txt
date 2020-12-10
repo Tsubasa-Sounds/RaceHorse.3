@@ -1,0 +1,74 @@
+# ---- 環境設定 ---- #
+
+# PHP 設定
+php --version
+# PHP 5.6.40 (cli) (built: Oct 31 2019 20:35:16) 
+
+# PDO 設定
+sudo service mysqld start
+mysql --version
+#mysql  Ver 14.14 Distrib 5.5.62, for Linux (x86_64) using readline 5.1
+
+# 日本語設定
+sed -e "/utf8/d" -e "/client/d" -e "/^\[mysqld_safe\]$/i character-set-server=utf8\n\n[client]\ndefault-character-set=utf8" /etc/my.cnf |sudo tee /etc/my.cnf
+
+$ 日本時間設定
+date
+echo "Asia/Tokyo" | sudo tee /etc/timezone
+sudo mysql_tzinfo_to_sql /usr/share/zoneinfo
+sudo cp /etc/sysconfig/clock /etc/sysconfig/clock.org
+sudo vi /etc/sysconfig/clock
+## 書き換え
+ZONE="Asia/Tokyo"
+UTC=true
+
+sudo ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+sudo reboot
+
+sudo service mysqld restart
+
+# PDO 設定
+php -m | grep pdo
+# pdo_mysql
+# pdo_sqlite
+
+# pdo_mysql がない場合
+sudo yum -y install php71 php71-mbstring php71-pdo
+
+## ---- データベース構築 ---- # 
+
+# MySQL
+
+
+sudo service mysqld start
+mysql -u root
+show databases;
+create database bbs_new character set utf8;
+show databases;
+
+use bbs_new;
+
+create table users(
+    id int primary key auto_increment, 
+    name varchar(50) not null,
+    nickname varchar(50) not null,
+    email varchar(100),
+    avatar varchar(300),
+    password varchar(50) not null,
+    created_at timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+// ログインした人がレースの投稿をするテーブル ??
+create table racehorses(
+    id int primary key auto_increment,
+    user_id int not null,
+    racehorse_name varchar(9) not null,
+    jockey_name varchar(50) not null,
+    racecourse varchar(50) not null,
+    race_name varchar(50) not null,
+    content varchar(255) not null,
+    created_at timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    foreign key(user_id) references users(id)
+    on delete cascade
+    on update cascade
+);

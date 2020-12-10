@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+header {
+    width: auto;
+    height: 100px;
+}
+
+#logo {
+    width: 125px;
+    height: 80px;
+    float:left;
+}
+
+h1 {
+    font-size:20px;
+    float: left;
+}
+
+#navber {
+    float: right;
+    height: 80px;
+    width: auto;
+}
+
+.navber {
+    
+}
+
+.nav-item {
+    float:right;
+}
+
+.nav-signup {
+    padding: 0.4rem 1.4rem;
+    display: inline-block;
+    border-radius: 25px;
+    text-align: center;
+    border: 2px solid #00CCCC;
+}
+
+.nav-login {
+    padding: 0.4rem 1.4rem;
+    display: inline-block;
+    border-radius: 25px;
+    text-align: center;
+    border: 2px solid blue;
+}
+
+a {
+    text-decoration: none;
+}
+ 
+
+li {
+    list-style: none;
+}
