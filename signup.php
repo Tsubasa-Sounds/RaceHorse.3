@@ -49,10 +49,19 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
+         <link rel="stylesheet" href="common/css/style.css">
         <title>新規会員登録</title>
     </head>
     <body>
-        <h1>新規会員登録</h1>
+        <header>
+            <a href="index.php">
+            <img id="logo" src="common/images/logo.jpg" alt="RaceHorse Photo">    
+                <h1>RaceHorse Photo</h1>
+            </a>
+        </header>
+        <h1>新規会員登録</h1><br>
+        <br>
+        <br>
         <form action="signup.php" method="post" enctype="multipart/form-data">
             お名前<input type="text" name="name"/><br>
             ニックネーム<input type="text" name="nickname"/><br>

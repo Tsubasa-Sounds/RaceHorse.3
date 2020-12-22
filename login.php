@@ -50,9 +50,16 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
+         <link rel="stylesheet" href="common/css/style.css">
         <title>ログイン</title>
     </head>
     <body>
+        <header>
+            <a href="index.php">
+            <img id="logo" src="common/images/logo.jpg" alt="RaceHorse Photo">    
+                <h1>RaceHorse Photo</h1>
+            </a>
+        </header>
         <h1>ログイン</h1>
         <form action="login.php" method="POST">
             メールアドレス<input type="email" name="email"/><br>

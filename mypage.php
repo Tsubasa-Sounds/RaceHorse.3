@@ -26,8 +26,27 @@
         $user_dao = null;
         
         $racehorse_dao = new RacehorseDAO();
-        $racehorses = $racehorse_dao->get_all_rasehorses();
-
+        //ポスト通信ならば
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            //var_dump($_POST);
+            $keyword = $_POST['keyword'];
+            $kind = $_POST['kind'];
+            //もし競走馬で検索する場合
+            if($kind === '競走馬で検索'){
+                $racehorses = $racehorse_dao->find_racehorses_by_racehorsename($keyword);
+            }else if($kind === '騎手で検索'){
+                $racehorses = $racehorse_dao->find_racehorses_by_jokeyname($keyword);
+            }else if($kind === '競馬場で検索'){
+                $racehorses = $racehorse_dao->find_racehorses_by_racecourse($keyword);
+            }else if($kind === 'レースで検索'){
+                $racehorses = $racehorse_dao->find_racehorses_by_racename($keyword);
+            }else{
+                 $racehorses = $racehorse_dao->find_racehorses($keyword);
+            }
+        }else{  //ゲット通信ならば
+             $racehorses = $racehorse_dao->get_all_rasehorses();
+        }
+       
         $racehorse_dao = null;
 
         if($_SESSION['flash_message'] !== null && $_SESSION['flash_message'] !== '投稿しました'){
@@ -45,6 +64,7 @@
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
+        <link rel="stylesheet" href="common/css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
@@ -73,46 +93,126 @@
         </style>
     </head>
     <body>
+        <header>
+            <a href="index.php">
+            <img id="logo" src="common/images/logo.jpg" alt="RaceHorse Photo">    
+                <h1>RaceHorse Photo</h1>
+            </a>
+        </header>
         <div class="container">
             <h2><? print $flash_message; ?></h2>
-            <img src="<?php print USER_IMAGE_DIR . $me->avatar; ?>">
+            <img class="floar-left" src="<?php print USER_IMAGE_DIR . $me->avatar; ?>">
             <?php print $me->nickname; ?>さん
-            <a href="post_racehorse.php" class="btn btn-primary">新規レース投稿</a>
-            
+            <a href="post_racehorse.php" class="btn btn-primary float-right">新規レース投稿</a>
+            <div class="row">
+                <form action="mypage.php" method="post">
+                    <input type="text" name="keyword" placeholder="フリーキーワード">
+                    <input type="submit" value="検索">
+                </form>
+            </div>
             <div class="row mt-3">
                 <h3 class="offset-sm-2 col-sm-8 text-center">投稿一覧</h3>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 clearfix">
                 <table class="offset-sm-1 col-sm-10 table table-bordered table-striped">
                     <tr>
-                        <th>投稿者</th>
-                        <th>競走馬の名前</th>
-                        <th>ジョッキー名</th>
-                        <th>レースコース</th>
-                        <th>レース名</th>
-                        <th>コメント</th>
-                        <th>投稿日時</th>
+                        <th>
+                            競走馬
+                            <form action="mypage.php" method="POST">
+                                <select name="keyword">
+                                <?php foreach($racehorses as $racehorse){?>
+                                <option value="<?php print $racehorse->racehorse_name; ?>">
+                                    <?php print $racehorse->racehorse_name; ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                                <button type="submit" name="kind" value="競走馬で検索">検索</button>
+                            </form>
+                        </th>
+                        <th>
+                            騎手
+                            <form action="mypage.php" method="POST">
+                              <select name="keyword">
+                                <?php foreach($racehorses as $racehorse){?>
+                                <option value="<?php print $racehorse->jockey_name; ?>">
+                                    <?php print $racehorse->jockey_name; ?>
+                                </option>
+                                <?php } ?>
+                            </select>    
+                                <button type="submit" name="kind" value="騎手で検索">検索</button>
+                            </form>
+                        </th>
+                        <th>
+                            競馬場
+                             <form action="mypage.php" method="POST">
+                            <select name="keyword">
+                                <?php foreach($racehorses as $racehorse){?>
+                                <option value="<?php print $racehorse->racecourse; ?>">
+                                    <?php print $racehorse->racecourse; ?>
+                                </option>
+                                <?php } ?>
+                            </select> 
+                                <button type="submit" name="kind" value="競馬場で検索">検索</button>
+                            </form>
+                        </th>
+                        <th>
+                            レース名
+                            <form action="mypage.php" method="POST">
+                            <select name="keyword">
+                                <?php foreach($racehorses as $racehorse){?>
+                                <option value="<?php print $racehorse->race_name; ?>">
+                                    <?php print $racehorse->race_name; ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                                <button type="submit" name="kind" value="レースで検索">検索</button>
+                            </form>
+                           
+                        </th>
+                        <th>お気に入り</th>
                     </tr>
-                <?php foreach($racehorses as $racehorse){ ?>    
-                    <tr>
-                        <td>
-                            <?php print $racehorse->get_user()->name; ?>
-                            <span class="avatar">
-                                <img src="<?php print USER_IMAGE_DIR . $racehorse->get_user()->avatar; ?>">
-                            </span>
-                        </td>
-                        <td><?php print $racehorse->racehorse_name; ?></td>
-                        <td><?php print $racehorse->jockey_name; ?></td>
-                        <td><?php print $racehorse->racecourse; ?></td>
-                        <td><?php print $racehorse->race_name; ?></td>
-                        <td><?php print $racehorse->content; ?></td>
-                        <td><?php print $racehorse->created_at; ?></td>
-                    </tr>
-                <?php } ?>    
                 </table>
             </div>
-            
-            <a href="logout.php" class="btn btn-primary">ログアウト</a>
+            <div class="row">
+                <div class="col">
+                    <?php foreach($racehorses as $racehorse){ ?>
+                    　<a href="show_racehorse.php?racehorse_id=<?php print $racehorse->id; ?>"><img class="img-fluid" src = "<?php print RACEHORSE_DIR . $racehorse->image; ?>"></a>
+                    <?php } ?>
+                    <!--<table class="offset-sm-1 col-sm-10 table table-bordered table-striped">-->
+                    <!--    <tr>-->
+                    <!--        <th>投稿者</th>-->
+                    <!--        <th>競走馬の名前</th>-->
+                    <!--        <th>ジョッキー名</th>-->
+                    <!--        <th>レースコース</th>-->
+                    <!--        <th>レース名</th>-->
+                    <!--        <th>コメント</th>-->
+                    <!--        <th>投稿日時</th>-->
+                    <!--    </tr>-->
+                    <!--<?php foreach($racehorses as $racehorse){ ?>    -->
+                    <!--    <tr>-->
+                    <!--        <td>-->
+                    <!--            <?php print $racehorse->get_user()->name; ?>-->
+                    <!--            <span class="avatar">-->
+                    <!--                <img src="<?php print USER_IMAGE_DIR . $racehorse->get_user()->avatar; ?>">-->
+                    <!--            </span>-->
+                    <!--        </td>-->
+                    <!--        <td><?php print $racehorse->racehorse_name; ?></td>-->
+                    <!--        <td><?php print $racehorse->jockey_name; ?></td>-->
+                    <!--        <td><?php print $racehorse->racecourse; ?></td>-->
+                    <!--        <td><?php print $racehorse->race_name; ?></td>-->
+                    <!--        <td><?php print $racehorse->content; ?></td>-->
+                    <!--        <td><?php print $racehorse->created_at; ?></td>-->
+                    <!--    </tr>-->
+                    <!--<?php } ?>    -->
+                    <!--</table>-->
+                    </div>
+                </div>
+            </div>
+            <div class"row">
+                <div class="col">
+                    <a href="logout.php" class="btn btn-primary">ログアウト</a>
+                </div>
+            </div>
         </div>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS, then Font Awesome -->

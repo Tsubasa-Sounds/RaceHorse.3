@@ -41,7 +41,6 @@
             <img id="logo" src="common/images/logo.jpg" alt="RaceHorse Photo">    
                 <h1>RaceHorse Photo</h1>
             </a>
-            
             <div class="" id="navber">
                 <ul class="navber">
                     <li class="nav-item">
