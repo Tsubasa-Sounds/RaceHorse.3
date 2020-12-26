@@ -109,6 +109,7 @@
             $this->close_connection($pdo, $stmp);
             // Racehorseクラスのインスタンスの配列を返す
             return $racehorses;
+           
         }
         public function find_racehorses_by_jokeyname($keyword){
             $pdo = $this->get_connection();

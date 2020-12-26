@@ -43,7 +43,9 @@
             }else{
                  $racehorses = $racehorse_dao->find_racehorses($keyword);
             }
+            $all_racehorses = $racehorse_dao->get_all_rasehorses();
         }else{  //ゲット通信ならば
+             $all_racehorses = $racehorse_dao->get_all_rasehorses();
              $racehorses = $racehorse_dao->get_all_rasehorses();
         }
        
@@ -120,7 +122,7 @@
                             競走馬
                             <form action="mypage.php" method="POST">
                                 <select name="keyword">
-                                <?php foreach($racehorses as $racehorse){?>
+                                <?php foreach($all_racehorses as $racehorse){?>
                                 <option value="<?php print $racehorse->racehorse_name; ?>">
                                     <?php print $racehorse->racehorse_name; ?>
                                 </option>
@@ -133,7 +135,7 @@
                             騎手
                             <form action="mypage.php" method="POST">
                               <select name="keyword">
-                                <?php foreach($racehorses as $racehorse){?>
+                                <?php foreach($all_racehorses as $racehorse){?>
                                 <option value="<?php print $racehorse->jockey_name; ?>">
                                     <?php print $racehorse->jockey_name; ?>
                                 </option>
@@ -146,7 +148,7 @@
                             競馬場
                              <form action="mypage.php" method="POST">
                             <select name="keyword">
-                                <?php foreach($racehorses as $racehorse){?>
+                                <?php foreach($all_racehorses as $racehorse){?>
                                 <option value="<?php print $racehorse->racecourse; ?>">
                                     <?php print $racehorse->racecourse; ?>
                                 </option>
@@ -159,7 +161,7 @@
                             レース名
                             <form action="mypage.php" method="POST">
                             <select name="keyword">
-                                <?php foreach($racehorses as $racehorse){?>
+                                <?php foreach($all_racehorses as $racehorse){?>
                                 <option value="<?php print $racehorse->race_name; ?>">
                                     <?php print $racehorse->race_name; ?>
                                 </option>
